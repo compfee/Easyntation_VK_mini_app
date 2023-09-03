@@ -1,0 +1,1 @@
+# Easyntation_VK_mini_app
