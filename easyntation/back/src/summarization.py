@@ -28,3 +28,39 @@ def summ_text(text):
     summary = tokenizer.decode(output_ids, skip_special_tokens=True)
     print('SUMMARY DONE')
     return summary
+
+def sber_gpt(text):
+
+    # Load model directly
+    from transformers import AutoTokenizer, AutoModelForCausalLM
+
+    tokenizer = AutoTokenizer.from_pretrained("ai-forever/rugpt3large_based_on_gpt2")
+    model = AutoModelForCausalLM.from_pretrained("ai-forever/rugpt3large_based_on_gpt2")
+    print('MODEL LOADED')
+    model.to("cpu")
+    article_text = text
+
+    input_ids = tokenizer(
+        [article_text],
+        max_length=1000,
+        truncation=True,
+        return_tensors="pt",
+    )["input_ids"].to("cpu")
+
+    output_ids = model.generate(
+        max_length=500,
+        min_length=40,
+        length_penalty=5,
+        input_ids=input_ids,
+        no_repeat_ngram_size=4
+    )[0]
+    summary = tokenizer.decode(output_ids, skip_special_tokens=True)
+    print('SUMMARY DONE')
+    return summary
+
+
+text_path = 'C:/Users/compf/Documents/Diploma/data/2022/bachelor/инженерно-исследовательский факультет/242491_bak1_07062022213504.pdf.txt'
+text = open(text_path,'r', encoding="utf8").readlines()
+# t = text.split()
+print(text)
+sber_gpt(text[:100])
